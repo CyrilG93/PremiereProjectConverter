@@ -1,1 +1,9 @@
-{"name":"premiere-project-converter","version":"0.1.1","private":true,"scripts":{"test":"node tests/converter.test.js","lint":"node --check client/main.js && node --check client/converter.js && node --check tests/converter.test.js"}}
+{
+  "name": "premiere-project-converter",
+  "version": "0.1.2",
+  "private": true,
+  "scripts": {
+    "test": "node tests/converter.test.js && node tests/panel.test.js",
+    "lint": "node --check client/main.js && node --check client/converter.js && node --check tests/converter.test.js && node --check tests/panel.test.js"
+  }
+}

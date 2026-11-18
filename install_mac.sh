@@ -9,4 +9,4 @@ for item in CSXS client host; do
 done
 # Enable CEP development mode for current and recent Premiere releases.
 for version in {7..20}; do defaults write "com.adobe.CSXS.$version" PlayerDebugMode 1; done
-echo "Installation terminée. Redémarrez Premiere 2026 puis ouvrez Fenêtre > Extensions > Project Converter."
+echo "Installation complete. Restart Premiere and open Window > Extensions > Project Converter."

@@ -14,10 +14,10 @@ for /L %%V in (7,1,20) do (
   reg add "HKCU\Software\Adobe\CSXS.%%V" /v PlayerDebugMode /t REG_SZ /d 1 /f >nul 2>&1
   if errorlevel 1 goto failed
 )
-echo Installation terminee. Redemarrez Premiere 2026 puis ouvrez Fenetre ^> Extensions ^> Project Converter.
+echo Installation complete. Restart Premiere and open Window ^> Extensions ^> Project Converter.
 if /I not "%~1"=="--no-pause" pause
 exit /b 0
 :failed
-echo Echec de l'installation.
+echo Installation failed.
 if /I not "%~1"=="--no-pause" pause
 exit /b 1

@@ -1,24 +1,24 @@
 # Premiere Project Converter
 
-Une extension CEP pour ouvrir une copie d'un projet Premiere 2027 dans Premiere 2026. L'original reste intact.
+A CEP extension that creates a copy of a newer Premiere Pro project for opening in an older version. The original file is preserved.
 
-La conversion change le numéro de format du projet. Elle a été testée sur un projet 2027 dans Premiere 26.5.2 ; certaines fonctionnalités ou certains effets récents peuvent ne pas être pris en charge. Vérifiez le montage, les médias, les titres et les effets après ouverture.
+The extension changes the project's format number; it does not translate features or effects. Conversions may fail or lose functionality, especially across major versions. Check the sequences, media, titles and effects after opening. One project saved in Premiere 27.0 was successfully opened in Premiere 26.5.2 using this method; other projects and versions may behave differently.
 
-## Installation
+## Install
 
-Téléchargez ce dépôt avec **Code > Download ZIP**, puis décompressez-le. Fermez Premiere Pro et lancez `install_mac.sh` sur macOS ou `install_windows.bat` sur Windows. Redémarrez Premiere 2026 et ouvrez **Fenêtre > Extensions > Project Converter**.
+Download this repository with **Code > Download ZIP**, then extract it. Close Premiere Pro and run `install_mac.sh` on macOS or `install_windows.bat` on Windows. Restart Premiere and open **Window > Extensions > Project Converter**.
 
-L'installation active le mode développeur CEP pour charger cette extension non signée. Sur Mac, si nécessaire, ouvrez le Terminal et glissez le fichier `install_mac.sh` dans la fenêtre, puis appuyez sur Entrée. Aucun téléchargement de Python ou de dépendances supplémentaires n'est nécessaire.
+The installer enables CEP developer mode to load this unsigned extension. On Mac, you can open Terminal, drag `install_mac.sh` into the window, and press Enter. Python and other external dependencies are not required.
 
-## Utilisation
+## Use
 
-1. Dans Premiere 2026, ouvrez le panneau et choisissez le projet `.prproj` provenant de Premiere 2027.
-2. Vérifiez les informations et cliquez sur **Convertir et ouvrir**.
-3. Choisissez le nom et l'emplacement de la copie. Pour protéger vos fichiers, l'extension ne remplace pas un fichier existant.
-4. Si Premiere le demande, reconnectez les médias, puis vérifiez le montage. Si l'ouverture automatique échoue, ouvrez manuellement la copie indiquée dans le panneau.
+1. Open the panel in the Premiere version you want to use, and choose the newer `.prproj` file.
+2. Check the **Target project format**. The panel reads it from the active saved project when possible, or suggests a format for known Premiere versions. To verify it, choose a reference `.prproj` saved in your current Premiere version. You can also enter a format number manually.
+3. Click **Convert and open** and select a new name and location. Existing files cannot be overwritten.
+4. Reconnect media if Premiere asks, and check your edit. If automatic opening fails, open the saved copy shown in the panel manually.
 
-Seuls les projets au format interne 46 vers le format 45 sont pris en charge. Il n'est pas nécessaire d'avoir Premiere 2027 installé pour convertir la copie.
+The target format must be lower than the source format. The extension uses Premiere's CEP interface, so it requires a Premiere version that supports CEP extensions.
 
 ## Changelog
 
-Les changements des versions publiées seront indiqués ici.
+Changes for published versions will be listed here.
