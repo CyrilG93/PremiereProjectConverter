@@ -25,10 +25,10 @@ function fakeHttps(status, payload) {
   } };
 }
 let result = '';
-update.check(fakeHttps(200, { tag_name: 'v0.1.4', draft: false, prerelease: false }), (tag, url) => { result = tag + ' ' + url; });
-assert.strictEqual(result, 'v0.1.4 ' + update.RELEASE_URL);
+update.check(fakeHttps(200, { tag_name: 'v1.0.1', draft: false, prerelease: false }), (tag, url) => { result = tag + ' ' + url; });
+assert.strictEqual(result, 'v1.0.1 ' + update.RELEASE_URL);
 result = '';
 update.check(fakeHttps(404, {}), () => { result = 'unexpected'; });
-update.check(fakeHttps(200, { tag_name: 'v0.1.4', prerelease: true }), () => { result = 'unexpected'; });
+update.check(fakeHttps(200, { tag_name: 'v1.0.1', prerelease: true }), () => { result = 'unexpected'; });
 assert.strictEqual(result, '');
 console.log('Update and release version tests passed.');

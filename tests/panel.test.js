@@ -21,7 +21,7 @@ const elements = {};
 });
 let opened = '';
 let external = '';
-const windowMock = { ProjectConverter: converter, ProjectVersions: versions, ProjectUpdate: { check(https, callback) { callback('v0.1.4', 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest'); } }, cep: { util: { openURLInDefaultBrowser(url) { external = url; } }, fs: {
+const windowMock = { ProjectConverter: converter, ProjectVersions: versions, ProjectUpdate: { check(https, callback) { callback('v1.0.1', 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest'); } }, cep: { util: { openURLInDefaultBrowser(url) { external = url; } }, fs: {
   showOpenDialog() { return { err: 0, data: [cepUrl(source)] }; },
   showSaveDialogEx() { return { err: 0, data: cepUrl(output) }; }
 } }, __adobe_cep__: { evalScript(script, callback) {

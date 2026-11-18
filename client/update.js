@@ -1,7 +1,7 @@
 /* Check the latest stable GitHub release without blocking the panel. */
 'use strict';
 (function (root) {
-  const VERSION = '0.1.3';
+  const VERSION = '1.0.0';
   const RELEASE_URL = 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest';
   function parseVersion(value) {
     const match = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(value || '');

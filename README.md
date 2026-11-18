@@ -6,9 +6,9 @@ The extension changes the project's format number; it does not translate feature
 
 ## Install
 
-Download this repository with **Code > Download ZIP**, then extract it. Close Premiere Pro and run `install_mac.sh` on macOS or `install_windows.bat` on Windows. Restart Premiere and open **Window > Extensions > Project Converter**.
+Download the latest release ZIP from the [GitHub releases page](https://github.com/CyrilG93/PremiereProjectConverter/releases/latest) and extract it. Close Premiere Pro, then run the signed `ProjectConverter.pkg` on macOS or `install_windows.bat` on Windows. Restart Premiere and open **Window > Extensions > Project Converter**.
 
-The installer enables CEP developer mode to load this unsigned extension. On Mac, you can open Terminal, drag `install_mac.sh` into the window, and press Enter. Python and other external dependencies are not required.
+The installer enables CEP developer mode to load the extension. On Mac, the included `install_mac.sh` can also launch the installer from Terminal. Python and other external dependencies are not required.
 
 ## Use
 
@@ -23,4 +23,7 @@ The target format must be lower than the source format. The extension uses Premi
 
 ## Changelog
 
-Changes for published versions will be listed here.
+### 1.0.0 — 18 November 2026
+
+- First public release: convert a project copy for an earlier version of Premiere, then open it directly.
+- Identify the source and target versions, and check for new releases from the panel.
