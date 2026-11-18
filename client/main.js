@@ -4,6 +4,8 @@
   const fs = require('fs');
   const path = require('path');
   const converter = window.ProjectConverter;
+  const versions = window.ProjectVersions;
+  const updater = window.ProjectUpdate;
   const $ = id => document.getElementById(id);
   let selection = null;
   let hostVersion = '';
@@ -13,7 +15,24 @@
   // CEP may return an encoded file URI for either dialog; normalize both.
   function local(value) { return converter.nativePath(value, process.platform); }
   function host(script, callback) { window.__adobe_cep__.evalScript(script, callback); }
-  function targetVersion() { const value = $('target').value; return /^\d+$/.test(value) ? Number(value) : NaN; }
+  function targetVersion() { const value = $('target').value === 'custom' ? $('custom-target').value : $('target').value; return /^\d+$/.test(value) ? Number(value) : NaN; }
+  // Unknown reference formats remain usable without presenting a misleading year.
+  function setTarget(format) {
+    if (versions.yearForFormat(format)) { $('target').value = String(format); $('custom-target').hidden = true; }
+    else { $('target').value = 'custom'; $('custom-target').hidden = false; $('custom-target').value = String(format); }
+  }
+  function openExternal(url) { if (window.cep && window.cep.util) window.cep.util.openURLInDefaultBrowser(url); else window.open(url); }
+  function bindLink(element, action) {
+    element.addEventListener('click', action);
+    element.addEventListener('keydown', function (event) { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); action(); } });
+  }
+  bindLink($('version'), function () { openExternal('https://www.cyrilplugin.com/'); });
+  updater.check(require('https'), function (tag, url) {
+    const banner = $('update-banner');
+    banner.textContent = 'Update available: ' + tag + ' — View release';
+    banner.hidden = false;
+    bindLink(banner, function () { openExternal(url); });
+  });
   function refresh() { $('convert').disabled = !(selection && Number.isSafeInteger(targetVersion()) && targetVersion() > 0 && targetVersion() < selection.info.projectVersion); }
   function chooseProject(title) {
     const result = window.cep.fs.showOpenDialog(false, false, title, '', ['prproj']);
@@ -24,10 +43,9 @@
     hostVersion = value && value !== 'EvalScript error.' ? value : '';
     $('host').textContent = hostVersion ? 'Current Premiere: ' + hostVersion : 'Current Premiere version unavailable.';
     // Known format mappings are suggestions; a saved reference is more reliable.
-    const known = { 24: 42, 25: 43, 26: 45, 27: 46 };
-    const suggested = known[parseInt(hostVersion, 10)];
+    const suggested = versions.formats[parseInt(hostVersion, 10) + 2000];
     if (suggested && !targetTouched && !targetFromProject) {
-      $('target').value = String(suggested);
+      setTarget(suggested);
       $('target-hint').textContent = 'Suggested for this Premiere version; verify with a reference project.';
       refresh();
     }
@@ -38,17 +56,18 @@
     try {
       const format = converter.inspect(fs.readFileSync(local(value))).projectVersion;
       targetFromProject = true;
-      $('target').value = String(format);
+      setTarget(format);
       $('target-hint').textContent = 'Detected from the active saved project. You can change it.';
       refresh();
     } catch (_) { /* An unsaved or inaccessible project requires a reference. */ }
   });
-  $('target').addEventListener('input', function () { targetTouched = true; refresh(); });
+  $('target').addEventListener('change', function () { targetTouched = true; $('custom-target').hidden = $('target').value !== 'custom'; refresh(); });
+  $('custom-target').addEventListener('input', function () { targetTouched = true; refresh(); });
   $('reference').addEventListener('click', function () {
     try {
       const selected = chooseProject('Choose a project saved in your current Premiere version');
       if (!selected) return;
-      $('target').value = String(converter.inspect(fs.readFileSync(selected)).projectVersion);
+      setTarget(converter.inspect(fs.readFileSync(selected)).projectVersion);
       targetTouched = true;
       $('target-hint').textContent = 'Detected from reference: ' + path.basename(selected);
       refresh();
@@ -63,9 +82,9 @@
       selection = { path: selected, info: info };
       $('name').textContent = path.basename(selected);
       $('source').textContent = info.build || 'Unknown';
-      $('format').textContent = String(info.projectVersion);
+      $('format').textContent = versions.sourceLabel(info);
       $('details').hidden = false;
-      status('Choose a lower target format, then convert the copy.');
+      status('Choose an older target version, then convert the copy.');
       refresh();
     } catch (error) { selection = null; refresh(); status('Could not read project: ' + error.message, true); }
   });

@@ -7,6 +7,7 @@ const path = require('path');
 const vm = require('vm');
 const zlib = require('zlib');
 const converter = require('../client/converter');
+const versions = require('../client/versions');
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'project converter '));
 const source = path.join(dir, 'source project.prproj');
 const output = path.join(dir, 'converted project.prproj');
@@ -15,11 +16,12 @@ fs.writeFileSync(source, zlib.gzipSync(Buffer.from(xml)));
 // The mock matches the macOS file://Volumes style that caused the regression.
 function cepUrl(file) { return 'file://' + file.split('/').filter(Boolean).map(encodeURIComponent).join('/'); }
 const elements = {};
-['status', 'target', 'target-hint', 'host', 'convert', 'choose', 'reference', 'details', 'name', 'source', 'format'].forEach(id => {
+['version', 'update-banner', 'custom-target', 'status', 'target', 'target-hint', 'host', 'convert', 'choose', 'reference', 'details', 'name', 'source', 'format'].forEach(id => {
   elements[id] = { value: '', textContent: '', hidden: false, disabled: false, handlers: {}, addEventListener(event, fn) { this.handlers[event] = fn; } };
 });
 let opened = '';
-const windowMock = { ProjectConverter: converter, cep: { fs: {
+let external = '';
+const windowMock = { ProjectConverter: converter, ProjectVersions: versions, ProjectUpdate: { check(https, callback) { callback('v0.1.4', 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest'); } }, cep: { util: { openURLInDefaultBrowser(url) { external = url; } }, fs: {
   showOpenDialog() { return { err: 0, data: [cepUrl(source)] }; },
   showSaveDialogEx() { return { err: 0, data: cepUrl(output) }; }
 } }, __adobe_cep__: { evalScript(script, callback) {
@@ -31,6 +33,12 @@ try {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../client/main.js'), 'utf8'), { window: windowMock, document: { getElementById(id) { return elements[id]; } }, require, process });
   elements.choose.handlers.click();
   assert.strictEqual(elements.name.textContent, 'source project.prproj');
+  assert.strictEqual(elements.format.textContent, 'Premiere Pro 2027');
+  assert.strictEqual(elements['update-banner'].hidden, false);
+  elements['update-banner'].handlers.click();
+  assert.strictEqual(external, 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest');
+  elements.version.handlers.click();
+  assert.strictEqual(external, 'https://www.cyrilplugin.com/');
   assert.strictEqual(elements.target.value, '45');
   assert.strictEqual(elements.convert.disabled, false);
   elements.convert.handlers.click();
