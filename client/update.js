@@ -1,7 +1,7 @@
 /* Check the latest stable GitHub release without blocking the panel. */
 'use strict';
 (function (root) {
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.1';
   const RELEASE_URL = 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest';
   function parseVersion(value) {
     const match = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(value || '');
@@ -20,7 +20,13 @@
         res.on('data', function (chunk) { body += chunk; if (body.length > 1024 * 1024) req.destroy(); });
         res.on('end', function () {
           if (res.statusCode !== 200) return;
-          try { const release = JSON.parse(body); if (!release.draft && !release.prerelease && isNewer(release.tag_name, VERSION)) callback(release.tag_name, RELEASE_URL); } catch (_) { /* Ignore malformed or unavailable release data. */ }
+          try {
+            const release = JSON.parse(body);
+            if (release.draft || release.prerelease || !isNewer(release.tag_name, VERSION)) return;
+            // Prefer the release ZIP; the release page is a fallback when none exists.
+            const asset = Array.isArray(release.assets) && release.assets.find(item => item && /\.zip$/i.test(item.name || '') && /^https:\/\/github\.com\/CyrilG93\/PremiereProjectConverter\/releases\/download\//i.test(item.browser_download_url || ''));
+            callback(release.tag_name, asset ? asset.browser_download_url : RELEASE_URL, Boolean(asset));
+          } catch (_) { /* Ignore malformed or unavailable release data. */ }
         });
         res.on('error', function () {});
       });

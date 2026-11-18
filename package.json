@@ -1,6 +1,6 @@
 {
   "name": "premiere-project-converter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "test": "node tests/converter.test.js && node tests/panel.test.js && node tests/update.test.js",

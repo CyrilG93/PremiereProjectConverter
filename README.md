@@ -17,11 +17,15 @@ The installer enables CEP developer mode to load the extension. On Mac, the incl
 3. Click **Convert and open** and select a new name and location. Existing files cannot be overwritten.
 4. Reconnect media if Premiere asks, and check your edit. If automatic opening fails, open the saved copy shown in the panel manually.
 
-When a newer GitHub release is available, a banner links to its release page. The version number opens cyrilplugin.com.
+When a newer GitHub release is available, a banner downloads its ZIP directly, or links to the release page if no ZIP is available. The version number opens cyrilplugin.com.
 
 The target format must be lower than the source format. The extension uses Premiere's CEP interface, so it requires a Premiere version that supports CEP extensions.
 
 ## Changelog
+
+### 1.0.1 — 18 November 2026
+
+- Download updates directly from the notification banner.
 
 ### 1.0.0 — 18 November 2026
 

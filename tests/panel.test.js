@@ -21,7 +21,7 @@ const elements = {};
 });
 let opened = '';
 let external = '';
-const windowMock = { ProjectConverter: converter, ProjectVersions: versions, ProjectUpdate: { check(https, callback) { callback('v1.0.1', 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest'); } }, cep: { util: { openURLInDefaultBrowser(url) { external = url; } }, fs: {
+const windowMock = { ProjectConverter: converter, ProjectVersions: versions, ProjectUpdate: { check(https, callback) { callback('v1.0.2', 'https://github.com/CyrilG93/PremiereProjectConverter/releases/download/v1.0.2/update.zip', true); } }, cep: { util: { openURLInDefaultBrowser(url) { external = url; } }, fs: {
   showOpenDialog() { return { err: 0, data: [cepUrl(source)] }; },
   showSaveDialogEx() { return { err: 0, data: cepUrl(output) }; }
 } }, __adobe_cep__: { evalScript(script, callback) {
@@ -36,7 +36,8 @@ try {
   assert.strictEqual(elements.format.textContent, 'Premiere Pro 2027');
   assert.strictEqual(elements['update-banner'].hidden, false);
   elements['update-banner'].handlers.click();
-  assert.strictEqual(external, 'https://github.com/CyrilG93/PremiereProjectConverter/releases/latest');
+  assert.strictEqual(external, 'https://github.com/CyrilG93/PremiereProjectConverter/releases/download/v1.0.2/update.zip');
+  assert.ok(elements['update-banner'].textContent.includes('Download'));
   elements.version.handlers.click();
   assert.strictEqual(external, 'https://www.cyrilplugin.com/');
   assert.strictEqual(elements.target.value, '45');

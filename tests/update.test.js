@@ -25,10 +25,15 @@ function fakeHttps(status, payload) {
   } };
 }
 let result = '';
-update.check(fakeHttps(200, { tag_name: 'v1.0.1', draft: false, prerelease: false }), (tag, url) => { result = tag + ' ' + url; });
-assert.strictEqual(result, 'v1.0.1 ' + update.RELEASE_URL);
+const zipUrl = 'https://github.com/CyrilG93/PremiereProjectConverter/releases/download/v1.0.2/update.zip';
+update.check(fakeHttps(200, { tag_name: 'v1.0.2', assets: [{ name: 'update.zip', browser_download_url: zipUrl }] }), (tag, url, hasZip) => { result = [tag, url, hasZip]; });
+assert.deepStrictEqual(result, ['v1.0.2', zipUrl, true]);
+update.check(fakeHttps(200, { tag_name: 'v1.0.2', assets: [] }), (tag, url, hasZip) => { result = [tag, url, hasZip]; });
+assert.deepStrictEqual(result, ['v1.0.2', update.RELEASE_URL, false]);
+update.check(fakeHttps(200, { tag_name: 'v1.0.2', assets: [{ name: 'update.zip', browser_download_url: 'https://example.com/update.zip' }] }), (tag, url, hasZip) => { result = [tag, url, hasZip]; });
+assert.deepStrictEqual(result, ['v1.0.2', update.RELEASE_URL, false]);
 result = '';
 update.check(fakeHttps(404, {}), () => { result = 'unexpected'; });
-update.check(fakeHttps(200, { tag_name: 'v1.0.1', prerelease: true }), () => { result = 'unexpected'; });
+update.check(fakeHttps(200, { tag_name: 'v1.0.2', prerelease: true }), () => { result = 'unexpected'; });
 assert.strictEqual(result, '');
 console.log('Update and release version tests passed.');

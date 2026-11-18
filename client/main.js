@@ -27,9 +27,9 @@
     element.addEventListener('keydown', function (event) { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); action(); } });
   }
   bindLink($('version'), function () { openExternal('https://www.cyrilplugin.com/'); });
-  updater.check(require('https'), function (tag, url) {
+  updater.check(require('https'), function (tag, url, hasZip) {
     const banner = $('update-banner');
-    banner.textContent = 'Update available: ' + tag + ' — View release';
+    banner.textContent = 'Update available: ' + tag + (hasZip ? ' — Download' : ' — View release');
     banner.hidden = false;
     bindLink(banner, function () { openExternal(url); });
   });
